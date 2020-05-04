@@ -1,0 +1,74 @@
+Local Cluster :
+	Spark Cluster : cd /home/ganesh/learn/bigdata/docker-spark-cluster-master
+		Start : docker-compose up -d --scale spark-worker=3
+	Hadoop Cluster : cd /home/ganesh/learn/bigdata/docker-hadoop-spark-workbench
+		Start : docker-compose up -d
+
+	Namenode stores details like datanodes.
+	Datanode stores real data
+
+    Namenode: http://localhost:50070
+    Datanode: http://localhost:50075
+    Spark-master: http://localhost:8080
+    Spark-notebook: http://localhost:9001
+    Hue (HDFS Filebrowser): http://localhost:8088/home
+
+Spark Submit :
+	/spark/bin/spark-submit --class com.srini.App --master spark://sparkmaster:7077 --name test /LegoSpark-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+
+Hadoop Commands:
+hdfs fsck -blocks -locations -racks -files /ganesh/
+hadoop fs -rm /ganesh/<fileName>
+
+
+Docker :
+	Remove dokcer :
+		yum remove docker-ce
+	Start Docker Service: 
+		sudo service docker start
+	Clean Up Docker:
+		docker rm -vf $(docker ps -aq)
+		docker rmi -f $(docker images -aq)
+		docker volume prune -f
+sudo docker stop $(sudo docker ps -aq)
+Create Network : docker network create --driver bridge local_cluster
+List all networks : docker network ls
+List all containers attached to network : docker network inspect <networkname>
+Print Running Process : docker ps
+Print only container names from docker ps: docker ps --format '{{.Names}}'
+copy to Master : docker cp /home/ganesh/workspace/LegoSpark/target/LegoSpark-0.0.1-SNAPSHOT-jar-with-dependencies.jar sparkmaster:/
+Copy to Worker : docker cp /home/ganesh/workspace/LegoSpark/target/LegoSpark-0.0.1-SNAPSHOT-jar-with-dependencies.jar docker-spark-cluster-master_spark-worker_1:/
+Print all stopped containers : docker ps --filter "status=exited"
+Print all containers list : docker ps --all --format "table {{.ID}}\t{{.Names}}"
+Placeholder	Meaning
+.Command	Print command used to start the container
+.CreatedAt	Print the time when the container was created
+.ID		Print Container ID
+.Image		Print Image ID
+.Label		Print value of a specific label assigned to this container
+.Labels		Print all labels assigned to container
+.Mounts		Print names of all volumes mounted within this container
+.Names		Print container names
+.Ports		Print all exposed ports
+.RunningFor	Print the time elapsed since the container was started
+.Size		Print container disk size
+.Status	P	rint current container status
+
+How to use external network in docker compose yml file?
+Add following lines below the image
+networks:
+  - local_cluster
+At last line add following lines
+networks:
+  local_cluster:
+    external: true
+
+Mongo DB:
+docker run -d -p 2717:27017 -v /home/ganesh/projects/docker_mongodb:/data/db --name mymongo mongo
+
+Mysql:
+ docker run -p 3306:3306 --name mysql -v /home/ganesh/projects/docker_mysql:/data/db -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:5.7.30 
+
+
+MongoDB:
+docker run -d -p 2717:27017 -v /home/ganesh/projects/docker_mongodb:/data/db --name mymongo mongo
