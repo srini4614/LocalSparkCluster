@@ -1,17 +1,16 @@
 Local Cluster :
-	Spark Cluster : cd /home/ganesh/learn/bigdata/docker-spark-cluster-master
+	Spark Cluster : cd /home/ganesh/Environements/LocalSparkCluster/
 		Start : docker-compose up -d --scale spark-worker=3
-	Hadoop Cluster : cd /home/ganesh/learn/bigdata/docker-hadoop-spark-workbench
+	Hadoop Cluster : cd /home/ganesh/Environements/LocalSparkCluster
 		Start : docker-compose up -d
 
-	Namenode stores details like datanodes.
-	Datanode stores real data
-
-    Namenode: http://localhost:50070
-    Datanode: http://localhost:50075
-    Spark-master: http://localhost:8080
-    Spark-notebook: http://localhost:9001
-    Hue (HDFS Filebrowser): http://localhost:8088/home
+		Namenode stores details like datanodes.
+		Datanode stores real data
+		Namenode: http://localhost:50070
+		Datanode: http://localhost:50075
+		Spark-master: http://localhost:8080
+		Spark-notebook: http://localhost:9001
+		Hue (HDFS Filebrowser): http://localhost:8088/home
 
 Spark Submit :
 	/spark/bin/spark-submit --class com.srini.App --master spark://sparkmaster:7077 --name test /LegoSpark-0.0.1-SNAPSHOT-jar-with-dependencies.jar
@@ -22,16 +21,18 @@ hadoop fs -rm /ganesh/<fileName>
 
 
 Docker :
-	Remove dokcer :
-		yum remove docker-ce
-	Start Docker Service: 
-		sudo service docker start
+	Remove dokcer :	yum remove docker-ce
+	Start Docker Service: sudo service docker start
+	Stop all Dockers :
+		sudo docker stop $(sudo docker ps -aq)
 	Clean Up Docker:
 		docker rm -vf $(docker ps -aq)
 		docker rmi -f $(docker images -aq)
 		docker volume prune -f
-sudo docker stop $(sudo docker ps -aq)
+
+
 Create Network : docker network create --driver bridge local_cluster
+
 List all networks : docker network ls
 List all containers attached to network : docker network inspect <networkname>
 Print Running Process : docker ps
@@ -64,11 +65,8 @@ networks:
     external: true
 
 Mongo DB:
-docker run -d -p 2717:27017 -v /home/ganesh/projects/docker_mongodb:/data/db --name mymongo mongo
+docker run -d -p 2717:27017 --name mymongo -v /home/ganesh/Environements/docker_mongodb:/data/db mongo
 
 Mysql:
- docker run -p 3306:3306 --name mysql -v /home/ganesh/projects/docker_mysql:/data/db -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:5.7.30 
+ docker run -p 3306:3306 --name mysql -v /home/ganesh/Environements/docker_mysql:/data/db -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:5.7.30 
 
-
-MongoDB:
-docker run -d -p 2717:27017 -v /home/ganesh/projects/docker_mongodb:/data/db --name mymongo mongo
